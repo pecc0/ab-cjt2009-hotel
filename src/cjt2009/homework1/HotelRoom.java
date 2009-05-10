@@ -32,8 +32,8 @@ public class HotelRoom extends Room {
 	}
 
 	/**
-	 * Returns the e-mails of the gusts in the room. Used to read and manipulate with these e-mails  
-	 * @return The e-mails of the gusts in the room 
+	 * Returns the e-mails of the guests in the room. Used to read and manipulate with these e-mails  
+	 * @return The e-mails of the guests in the room 
 	 */
 	public ArrayList<String> getGuestEmails() {
 		return guestEmails;
