@@ -13,6 +13,12 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+/**
+ * My implementation of the Hotel interface
+ * 
+ * @author Petko Petkov
+ *
+ */
 public class MyHotel implements Hotel {
 
 	private Hashtable<Integer, HotelRoom> rooms = new Hashtable<Integer, HotelRoom>();
@@ -129,7 +135,6 @@ public class MyHotel implements Hotel {
 		}
 	}
 
-
 	@Override
 	public boolean load(File f) {
 		FileInputStream fis = null;
@@ -159,7 +164,13 @@ public class MyHotel implements Hotel {
 		}
 	}
 
-	
+	/**
+	 * Creates a hotel guest from the input base guest, 
+	 * adds the new hotel guest to the guests pool 
+	 * and returns a reference to it  
+	 * @param g A base guest
+	 * @return reference to the new hotel guest
+	 */
 	private HotelGuest addGuest(Guest g){
 		HotelGuest hg = new HotelGuest(g);
 		guests.put(g.getEmail(), hg);
