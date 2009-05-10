@@ -19,64 +19,6 @@ public class MyHotel implements Hotel {
 	private Hashtable<String, HotelGuest> guests = new Hashtable<String, HotelGuest>();
 	
 	@Override
-	public Collection<Room> getAvailableRooms() {
-		Collection<Room> result = new ArrayList<Room>();
-		Enumeration<HotelRoom> e = rooms.elements();
-		HotelRoom r = e.nextElement();
-		for(; e.hasMoreElements(); r = e.nextElement()){
-			if (!r.isOccupied()) {
-				result.add(r);
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public Collection<Guest> getGuestInRoom(int roomNumber) {
-		Collection<Guest> result = new ArrayList<Guest>();
-		HotelRoom room = rooms.get(new Integer(roomNumber));
-		for (String email:room.getGuestEmails()){
-			result.add(this.guests.get(email));
-		}
-		return result;
-	}
-
-	@Override
-	public int getRoom(Guest guest) {
-		HotelGuest g = guests.get(guest.getEmail());
-		return g.getRoomNumber();
-	}
-
-	@Override
-	public boolean load(File f) {
-		FileInputStream fis = null;
-		ObjectInputStream ois = null;
-		try {
-			fis = new FileInputStream(f);
-	        ois = new ObjectInputStream(fis);
-			rooms = (Hashtable<Integer, HotelRoom>)ois.readObject();
-			guests = (Hashtable<String, HotelGuest>)ois.readObject();
-			return true;
-			
-		} 
-		catch (IOException e) 
-		{
-			return false;
-		}
-		catch (ClassNotFoundException e) {
-			return false;
-		}
-		finally {
-			if (ois != null) {
-				try {
-					ois.close();
-				} catch (Exception e2) {
-				}
-			}
-		}
-	}
-
-	@Override
 	public void populateRooms(Collection<Room> rooms) {
 		for (Room r : rooms){
 			this.rooms.put(new Integer(r.getNumber()), new HotelRoom(r));
@@ -130,6 +72,35 @@ public class MyHotel implements Hotel {
 	}
 
 	@Override
+	public Collection<Room> getAvailableRooms() {
+		Collection<Room> result = new ArrayList<Room>();
+		Enumeration<HotelRoom> e = rooms.elements();
+		HotelRoom r = e.nextElement();
+		for(; e.hasMoreElements(); r = e.nextElement()){
+			if (!r.isOccupied()) {
+				result.add(r);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Collection<Guest> getGuestInRoom(int roomNumber) {
+		Collection<Guest> result = new ArrayList<Guest>();
+		HotelRoom room = rooms.get(new Integer(roomNumber));
+		for (String email:room.getGuestEmails()){
+			result.add(this.guests.get(email));
+		}
+		return result;
+	}
+	
+	@Override
+	public int getRoom(Guest guest) {
+		HotelGuest g = guests.get(guest.getEmail());
+		return g.getRoomNumber();
+	}
+	
+	@Override
 	public boolean store(File f) {
 		ObjectOutputStream oos = null;
 		FileOutputStream fos = null;
@@ -158,6 +129,37 @@ public class MyHotel implements Hotel {
 		}
 	}
 
+
+	@Override
+	public boolean load(File f) {
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+		try {
+			fis = new FileInputStream(f);
+	        ois = new ObjectInputStream(fis);
+			rooms = (Hashtable<Integer, HotelRoom>)ois.readObject();
+			guests = (Hashtable<String, HotelGuest>)ois.readObject();
+			return true;
+			
+		} 
+		catch (IOException e) 
+		{
+			return false;
+		}
+		catch (ClassNotFoundException e) {
+			return false;
+		}
+		finally {
+			if (ois != null) {
+				try {
+					ois.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+	}
+
+	
 	private HotelGuest addGuest(Guest g){
 		HotelGuest hg = new HotelGuest(g);
 		guests.put(g.getEmail(), hg);
