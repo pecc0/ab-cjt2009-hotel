@@ -2,12 +2,14 @@ package cjt2009.homework1;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.Assert;
 
 public class TestMyHotel {
 	
+
 	@org.junit.Test
 	public void testRent1(){
 		ArrayList<Room> rooms = new ArrayList<Room>();
@@ -115,7 +117,82 @@ public class TestMyHotel {
 					&& g.getName().equals("P"));
 		} catch (Exception e) {
 			AssertionError ae = new AssertionError(
-	            "Failed to save and load the hotel");
+	            "Exception while testing");
+	        ae.initCause(e);
+	        throw ae;
+		}
+	}
+	
+	@org.junit.Test
+	public void testGetRoom() {
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		rooms.add(new Room(101, 3, 5.f));
+		rooms.add(new Room(102, 2, 6.f));
+		
+		ArrayList<Guest> guests = new ArrayList<Guest>();
+		guests.add(new Guest("Dancho", "d@a"));
+		try {
+			Hotel h = new MyHotel();
+			h.populateRooms(rooms);
+			h.rentARoom(guests);
+			Assert.assertTrue("Dancho must be in room 102", h.getRoom(guests.get(0)) == 102);
+			Assert.assertTrue("Mr. Not Here must not be here", 
+					h.getRoom(new Guest("Not Here", "n@h.com")) == -1);
+		} catch (Exception e) {
+			AssertionError ae = new AssertionError(
+	            "Exception while testing");
+	        ae.initCause(e);
+	        throw ae;
+		}
+	}
+	@org.junit.Test
+	public void testGetGuests() {
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		rooms.add(new Room(101, 3, 5.f));
+		rooms.add(new Room(102, 2, 6.f));
+		
+		ArrayList<Guest> guests = new ArrayList<Guest>();
+		guests.add(new Guest("Dancho", "d@a"));
+		try {
+			Hotel h = new MyHotel();
+			h.populateRooms(rooms);
+			h.rentARoom(guests);
+			Collection<Guest> g = h.getGuestInRoom(102);
+			
+			Assert.assertTrue("Room 102 must be occupied by Dancho", 
+					g != null 
+					&& g.iterator().next().getEmail() == "d@a");
+			
+			Assert.assertTrue("Room 101 must be empty", 
+					h.getGuestInRoom(101) == null);
+		} catch (Exception e) {
+			AssertionError ae = new AssertionError(
+	            "Exception while testing");
+	        ae.initCause(e);
+	        throw ae;
+		}
+	}
+	
+	@org.junit.Test
+	public void testAvailableRooms() {
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		rooms.add(new Room(101, 3, 5.f));
+		rooms.add(new Room(102, 2, 6.f));
+		
+		ArrayList<Guest> guests = new ArrayList<Guest>();
+		guests.add(new Guest("Dancho", "d@a"));
+		try {
+			Hotel h = new MyHotel();
+			h.populateRooms(rooms);
+			h.rentARoom(guests);
+			Assert.assertTrue("there must be 1 available room", h.getAvailableRooms().size() == 1);
+			guests = new ArrayList<Guest>();
+			guests.add(new Guest("Pencho", "p@a"));
+			h.rentARoom(guests);
+			Assert.assertTrue("there must be no available room", h.getAvailableRooms() == null);
+		} catch (Exception e) {
+				AssertionError ae = new AssertionError(
+	            "Exception while testing");
 	        ae.initCause(e);
 	        throw ae;
 		}
