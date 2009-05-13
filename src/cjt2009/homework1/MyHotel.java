@@ -79,11 +79,14 @@ public class MyHotel implements Hotel {
 
 	@Override
 	public Collection<Room> getAvailableRooms() {
-		Collection<Room> result = new ArrayList<Room>();
+		Collection<Room> result = null;
 		Enumeration<HotelRoom> e = rooms.elements();
-		HotelRoom r = e.nextElement();
-		for(; e.hasMoreElements(); r = e.nextElement()){
+		while(e.hasMoreElements()){
+			HotelRoom r = e.nextElement();
 			if (!r.isOccupied()) {
+				if (result == null) {
+					result = new ArrayList<Room>();
+				}
 				result.add(r);
 			}
 		}
@@ -92,8 +95,11 @@ public class MyHotel implements Hotel {
 
 	@Override
 	public Collection<Guest> getGuestInRoom(int roomNumber) {
-		Collection<Guest> result = new ArrayList<Guest>();
 		HotelRoom room = rooms.get(new Integer(roomNumber));
+		if (!room.isOccupied()) {
+			return null;
+		}
+		Collection<Guest> result = new ArrayList<Guest>();
 		for (String email:room.getGuestEmails()){
 			result.add(this.guests.get(email));
 		}
@@ -103,6 +109,9 @@ public class MyHotel implements Hotel {
 	@Override
 	public int getRoom(Guest guest) {
 		HotelGuest g = guests.get(guest.getEmail());
+		if (g == null) {
+			return -1;
+		}
 		return g.getRoomNumber();
 	}
 	
@@ -113,11 +122,6 @@ public class MyHotel implements Hotel {
 		try {
 			fos = new FileOutputStream(f);
 			oos = new ObjectOutputStream(fos);
-			//Enumeration<HotelRoom> e = rooms.elements();
-			//HotelRoom r = e.nextElement();
-			//for(; e.hasMoreElements(); r = e.nextElement()){
-			//	oos.writeObject(r);
-			//}
 			oos.writeObject(rooms);
 			oos.writeObject(guests);
 			return true;

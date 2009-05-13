@@ -39,7 +39,7 @@ public Room rentARoom(Collection<Guest> guests, float rate) throws NoAvailableRo
 /**
 * Returns all available rooms
 *
-* @return all available rooms
+* @return all available rooms, or null if there are aren't
 */
 public Collection<Room> getAvailableRooms();
 
